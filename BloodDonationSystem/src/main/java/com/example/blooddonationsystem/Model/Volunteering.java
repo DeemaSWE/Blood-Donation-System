@@ -52,13 +52,15 @@ public class Volunteering {
     @Column(columnDefinition = "varchar(25) not null unique")
     private String email ;
 
+    private Double averageRating;
+
+    private Integer ratingCount;
 
     @ManyToMany
     @JsonIgnore
     private Set<HospitalVolunteer> hospitalVolunteers;
 
     @ManyToMany
-    @JsonIgnore
     private Set<Reservation> reservations;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "volunteering")

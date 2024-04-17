@@ -27,40 +27,73 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
+    // add a reservation for a user to donate blood to an emergency patient
     public void addReservation(Reservation reservation,Integer user_id,Integer emergencyPatinet_id) {
         EmergencyPatient emergencyPatient = emergencyPatientRepository.findEmergencyPatientById(emergencyPatinet_id);
-        User user=userRepository.findUserById(user_id);
+        User user = userRepository.findUserById(user_id);
 
-        if(emergencyPatient==null){
+        if(emergencyPatient == null)
             throw new ApiException("Emergency Patient not found");
-        }
 
-        if(user==null){
+        if(emergencyPatient.getBloodDonation() == 0)
+            throw new ApiException("Cannot reserve for this patient");
+
+
+
+        if(user == null)
             throw new ApiException("User not found");
-        }
 
-//        String bloodTypeNeeded = reservation.getBloodType();
-//        String bloodTypeAvailable = emergencyPatient.getBloodType();
-//
-//        if (!bloodTypeNeeded.equals(bloodTypeAvailable)) {
-//            throw new ApiException("Blood type mismatch");
-//        }
-//        reservation.setUser(user);
+        if(!checkBloodType(user, emergencyPatient))
+            throw new ApiException("User blood type is not compatible with the emergency patient blood type");
+
         reservationRepository.save(reservation);
     }
 
+    // check if the user blood type can donate blood to the emergency patient
+    public boolean checkBloodType(User user, EmergencyPatient emergencyPatient) {
+        String userBloodType = user.getBloodType();
+        String emergencyPatientBloodType = emergencyPatient.getBloodType();
+
+        if (userBloodType.equals("O-")) {
+            return true;
+
+        } else if (userBloodType.equals("O+")) {
+            return emergencyPatientBloodType.equals("O+") || emergencyPatientBloodType.equals("A+") || emergencyPatientBloodType.equals("B+") || emergencyPatientBloodType.equals("AB+");
+
+        } else if (userBloodType.equals("A-")) {
+            return emergencyPatientBloodType.equals("A-") || emergencyPatientBloodType.equals("A+") || emergencyPatientBloodType.equals("AB-") || emergencyPatientBloodType.equals("AB+");
+
+        } else if (userBloodType.equals("A+")) {
+            return emergencyPatientBloodType.equals("A+") || emergencyPatientBloodType.equals("AB+");
+
+        } else if (userBloodType.equals("B-")) {
+            return emergencyPatientBloodType.equals("B-") || emergencyPatientBloodType.equals("B+") || emergencyPatientBloodType.equals("AB-") || emergencyPatientBloodType.equals("AB+");
+
+        } else if (userBloodType.equals("B+")) {
+            return emergencyPatientBloodType.equals("B+") || emergencyPatientBloodType.equals("AB+");
+
+        } else if (userBloodType.equals("AB-")) {
+            return emergencyPatientBloodType.equals("AB-") || emergencyPatientBloodType.equals("AB+");
+
+        } else if (userBloodType.equals("AB+")) {
+            return emergencyPatientBloodType.equals("AB+");
+        }
+
+        return false;
+    }
 
 
-    public void updateReservation(Integer id, Reservation reservation) {
-        Reservation r = reservationRepository.findReservationById(id);
+    public void updateReservation(Integer id, Reservation updatedReservation) {
+        Reservation reservation = reservationRepository.findReservationById(id);
 
-        if (r == null)
-            throw new ApiException("not found");
-//
-//        r.setUser(reservation.getUser());
-//        r.setBookedCase(reservation.getBookedCase());
+        if (reservation == null)
+            throw new ApiException("reservation not found");
 
-        reservationRepository.save(r);
+        reservation.setUsers(updatedReservation.getUsers());
+        reservation.setEmergencyPatient(updatedReservation.getEmergencyPatient());
+        reservation.setStatus(updatedReservation.getStatus());
+
+        reservationRepository.save(reservation);
     }
 
 

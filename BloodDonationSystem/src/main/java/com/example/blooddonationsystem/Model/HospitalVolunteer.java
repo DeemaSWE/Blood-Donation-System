@@ -51,7 +51,6 @@ public class HospitalVolunteer {
     @Column(columnDefinition = "varchar(20)")
     private String status ;
 
-
     @ManyToOne
     @JsonIgnore
     private Hospital hospital;

@@ -44,7 +44,14 @@ public class EmergencyPatient {
     private String paitentCase ;
 
 
+    @NotEmpty(message = "Emergency status should be not empty")
+    @Pattern(regexp = "^(very urgent|urgent)$")
+    @Column(columnDefinition = "varchar(14) not null")
+    private String emergencyStatus;
+
+
     @NotEmpty(message = "blood type should be not empty")
+    @Pattern(regexp = "^(A|B|AB|O)[+-]$", message = "Blood type should be valid")
     @Column(columnDefinition = "varchar(4) not null")
     private String bloodType ;
 
@@ -65,5 +72,10 @@ public class EmergencyPatient {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "emergencyPatient")
     private Set<Reservation> reservations;
+
+    @NotEmpty(message = "status should be not empty")
+    @Pattern(regexp = "^(completed|not complete)$" , message = "status should be completed or not complete")
+    @Column(columnDefinition = "varchar(10) not null check (status in ('completed','not complete'))")
+    private String status;
 
 }

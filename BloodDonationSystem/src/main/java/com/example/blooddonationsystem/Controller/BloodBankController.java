@@ -1,5 +1,7 @@
 package com.example.blooddonationsystem.Controller;
 
+import com.example.blooddonationsystem.Api.ApiException;
+import com.example.blooddonationsystem.Api.ApiResponse;
 import com.example.blooddonationsystem.Model.BloodBank;
 import com.example.blooddonationsystem.Service.BloodBankService;
 import jakarta.validation.Valid;
@@ -36,5 +38,33 @@ public class BloodBankController {
         bloodBankService.deleteBloodBank(id);
         return ResponseEntity.status(200).body("Blood bank deleted successfully");
     }
+
+
+    //    endpoint
+
+
+    @GetMapping("/getAll/{isAttended}")
+    public ResponseEntity getAllAppointments(@PathVariable String isAttended) {
+        return ResponseEntity.status(200).body(bloodBankService.getAllAppointments(isAttended));
+    }
+
+    // blood bank can change user appointment status to attended
+    @PutMapping("/attend-appointment/{bloodbank_id}/{appointment_id}")
+    public ResponseEntity attendAppointment(@PathVariable Integer bloodbank_id,@PathVariable Integer appointment_id) {
+        bloodBankService.attendAppointment(bloodbank_id,appointment_id);
+        return ResponseEntity.status(200).body("Changed appointment status to attended successfully");
+    }
+
+    @PutMapping("/accept-appointment/{bloodBankId}/{appointmentId}/{status}")
+    public ResponseEntity AcceptingOrRejectingAppointment(@PathVariable Integer bloodBankId ,@PathVariable Integer appointmentId ,@PathVariable String status){
+
+        return ResponseEntity.status(200).body(bloodBankService.AcceptingOrRejectingAppointment(bloodBankId, appointmentId, status));
+    }
+
+    @PutMapping("/status-bank/{bankId}/{isThere}")
+    public ResponseEntity IsThereABloodBank(@PathVariable Integer bankId ,@PathVariable Boolean isThere){
+        return ResponseEntity.status(200).body(bloodBankService.IsThereABloodBank(bankId, isThere));
+    }
+
 
 }

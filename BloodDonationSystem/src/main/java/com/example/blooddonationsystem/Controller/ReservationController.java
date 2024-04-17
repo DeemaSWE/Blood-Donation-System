@@ -22,7 +22,7 @@ public class ReservationController {
         return reservationService.getAllReservation();
     }
 
-    @PostMapping("/add/{user_id}/{emergency-patient_id}")
+    @PostMapping("/add/{user_id}/{emergencyPatient_id}")
     public void addReservation(@RequestBody @Valid Reservation reservation, @PathVariable Integer user_id, Integer emergencyPatinet_id) {
         reservationService.addReservation(reservation,user_id,emergencyPatinet_id);
     }

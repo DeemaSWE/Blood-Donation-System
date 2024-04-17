@@ -21,9 +21,9 @@ public class EmergencyPatientController {
         return ResponseEntity.status(200).body(emergencyPatientService.getAllEmergencyPatient());
     }
 
-    @PostMapping("/add")
-    public ResponseEntity addEmergencyPatient(@RequestBody @Valid EmergencyPatient emergencyPatient) {
-        emergencyPatientService.addEmergencyPatient(emergencyPatient);
+    @PostMapping("/add/{hospitalId}")
+    public ResponseEntity addEmergencyPatient(@RequestBody @Valid EmergencyPatient emergencyPatient ,@PathVariable Integer hospitalId ){
+        emergencyPatientService.addEmergencyPatient(emergencyPatient, hospitalId);
         return ResponseEntity.status(200).body("Emergency Patient added successfully");
     }
 
@@ -38,4 +38,13 @@ public class EmergencyPatientController {
         emergencyPatientService.deleteEmergencyPatient(id);
         return ResponseEntity.status(200).body("Emergency Patient deleted successfully");
     }
+
+    //    endpoint
+
+    // sort
+    @GetMapping("/sort-cases")
+    public ResponseEntity sortCases(){
+        return ResponseEntity.status(200).body(emergencyPatientService.sortCases());
+    }
+
 }

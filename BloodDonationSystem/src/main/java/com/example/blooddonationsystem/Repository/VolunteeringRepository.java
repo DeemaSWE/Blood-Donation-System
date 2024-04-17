@@ -7,4 +7,5 @@ public interface VolunteeringRepository extends JpaRepository<Volunteering , Int
 
     Volunteering findVolunteeringById(Integer id);
 
+
 }

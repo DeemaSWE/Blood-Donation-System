@@ -3,7 +3,9 @@ package com.example.blooddonationsystem.Service;
 
 import com.example.blooddonationsystem.Api.ApiException;
 import com.example.blooddonationsystem.Model.EmergencyPatient;
+import com.example.blooddonationsystem.Model.Hospital;
 import com.example.blooddonationsystem.Repository.EmergencyPatientRepository;
+import com.example.blooddonationsystem.Repository.HospitalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +16,20 @@ import java.util.List;
 public class EmergencyPatientService {
 
     private final EmergencyPatientRepository emergencyPatientRepository ;
+    private final HospitalRepository hospitalRepository ;
 
 
     public List<EmergencyPatient> getAllEmergencyPatient() {
         return emergencyPatientRepository.findAll();
     }
 
-    public void addEmergencyPatient(EmergencyPatient emergencyPatient) {
+    public void addEmergencyPatient(EmergencyPatient emergencyPatient , Integer HospitalId) {
+
+        Hospital hospital = hospitalRepository.findHospitalById(HospitalId);
+        if (hospital == null){
+            throw new ApiException("hospital not found");
+        }
+
         emergencyPatientRepository.save(emergencyPatient);
     }
 
@@ -50,5 +59,16 @@ public class EmergencyPatientService {
         }
         emergencyPatientRepository.delete(emergencyPatient1);
     }
+
+//    endpoint
+
+    public List<EmergencyPatient> sortCases(){
+        List<EmergencyPatient> veryUrgent = emergencyPatientRepository.getEmergencyPatientsByEmergencyStatus("very urgent");
+        List<EmergencyPatient> urgent = emergencyPatientRepository.getEmergencyPatientsByEmergencyStatus("urgent");
+
+        veryUrgent.addAll(urgent);
+        return veryUrgent;
+    }
+
 
 }

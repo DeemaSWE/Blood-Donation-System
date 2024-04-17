@@ -48,7 +48,6 @@ public class User {
     private String bloodType;
 
     @ManyToMany
-    @JsonIgnore
     private Set<Reservation> reservations;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")

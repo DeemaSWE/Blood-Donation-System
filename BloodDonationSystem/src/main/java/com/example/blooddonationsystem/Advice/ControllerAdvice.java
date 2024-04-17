@@ -6,6 +6,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,6 +21,11 @@ public class ControllerAdvice {
 
     @ExceptionHandler(value = ApiException.class)
     public ResponseEntity<ApiResponse> ApiException(ApiException e){
+        return ResponseEntity.status(400).body(new ApiResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(value = TransactionSystemException.class)
+    public ResponseEntity<ApiResponse> TransactionSystemException(TransactionSystemException e){
         return ResponseEntity.status(400).body(new ApiResponse(e.getMessage()));
     }
 

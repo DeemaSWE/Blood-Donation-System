@@ -1,12 +1,14 @@
 package com.example.blooddonationsystem.Model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Setter
@@ -27,6 +29,19 @@ public class BloodBank {
     @NotEmpty(message = "City cannot be empty")
     @Column(columnDefinition = "varchar(50) not null")
     private String city;
+
+    @AssertTrue
+    @Column(columnDefinition = "boolean")
+    private Boolean isThere ;
+
+
+    @Column(columnDefinition = "date")
+    private LocalDate date ;
+
+
+    private Double averageRating;
+
+    private Integer ratingCount;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "bloodBank")
     private Set<Appointment> appointments;
