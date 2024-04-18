@@ -22,9 +22,9 @@ public class HospitalVolunteerController {
         return ResponseEntity.status(200).body(hospitalVolunteerService.getAllHospitalVolunteer());
     }
 
-    @PostMapping("/add")
-    public ResponseEntity addHospitalVolunteer(@RequestBody @Valid HospitalVolunteer hospitalVolunteer) {
-        hospitalVolunteerService.addHospitalVolunteer(hospitalVolunteer);
+    @PostMapping("/add/{hospitalId}")
+    public ResponseEntity addHospitalVolunteer(@RequestBody @Valid HospitalVolunteer hospitalVolunteer, @PathVariable Integer hospitalId ){
+        hospitalVolunteerService.addHospitalVolunteer(hospitalVolunteer, hospitalId);
         return ResponseEntity.status(200).body("Hospital Volunteer added successfully");
     }
 

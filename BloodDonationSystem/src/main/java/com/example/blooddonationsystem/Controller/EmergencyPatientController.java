@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/emergency-patient")
 @RequiredArgsConstructor
@@ -23,7 +25,7 @@ public class EmergencyPatientController {
 
     @PostMapping("/add/{hospitalId}")
     public ResponseEntity addEmergencyPatient(@RequestBody @Valid EmergencyPatient emergencyPatient ,@PathVariable Integer hospitalId ){
-        emergencyPatientService.addEmergencyPatient(emergencyPatient, hospitalId);
+        emergencyPatientService.addEmergencyPatient(hospitalId, emergencyPatient);
         return ResponseEntity.status(200).body("Emergency Patient added successfully");
     }
 
@@ -46,5 +48,26 @@ public class EmergencyPatientController {
     public ResponseEntity sortCases(){
         return ResponseEntity.status(200).body(emergencyPatientService.sortCases());
     }
+
+
+    //هياء
+    @GetMapping("/sort-ep-d")
+    public ResponseEntity<List<EmergencyPatient>> sortEpByDate() {
+        List<EmergencyPatient> sortedCases = emergencyPatientService.sortEpByDate();
+        return ResponseEntity.ok(sortedCases);
+    }
+
+    @GetMapping("/blood-type/{bloodType}")
+    public ResponseEntity<List<EmergencyPatient>> getEmergencyPatientsByBloodType(@PathVariable String bloodType) {
+        List<EmergencyPatient> emergencyPatients = emergencyPatientService.findEmergencyPatientsByBloodType(bloodType);
+        return ResponseEntity.ok(emergencyPatients);
+    }
+
+    @GetMapping("/city/{city}")
+    public ResponseEntity<List<EmergencyPatient>> findEmergencyPatientsByHospitalByCity(@PathVariable String city) {
+        List<EmergencyPatient> emergencyPatients = emergencyPatientService.findEmergencyPatientsByHospitalByCity(city);
+        return ResponseEntity.ok(emergencyPatients);
+    }
+
 
 }

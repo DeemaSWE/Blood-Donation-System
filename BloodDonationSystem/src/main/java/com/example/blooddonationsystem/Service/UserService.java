@@ -6,6 +6,7 @@ import com.example.blooddonationsystem.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -44,5 +45,35 @@ public class UserService {
             throw new ApiException("User not found");
 
         userRepository.delete(user);
+    }
+
+
+
+
+    //endpoint هياء
+
+    public List<String> getBloodTypesUserCanDonate(String user_BloodType) {
+        switch (user_BloodType) {
+            case "A+":
+                return List.of("A+", "AB+");
+            case "A-":
+                return List.of("A+", "A-", "AB+", "AB-");
+            case "B+":
+                return List.of("B+", "AB+");
+            case "B-":
+                return List.of("B+", "B-", "AB+", "AB-");
+            case "AB+":
+                return List.of("AB+");
+            case "AB-":
+                return List.of("AB+", "AB-");
+            case "O+":
+                return List.of("A+", "B+", "AB+", "O+");
+            case "O-":
+                return List.of("A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-");
+            default:
+                return new ArrayList<>();
+        }
+
+
     }
 }

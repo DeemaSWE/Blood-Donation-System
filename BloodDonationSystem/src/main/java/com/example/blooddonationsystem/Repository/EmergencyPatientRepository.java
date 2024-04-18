@@ -12,4 +12,11 @@ public interface EmergencyPatientRepository extends JpaRepository<EmergencyPatie
     List<EmergencyPatient> findEmergencyPatientsByHospitalIdAndStatus(Integer hospital_id, String status);
 
     List<EmergencyPatient> getEmergencyPatientsByEmergencyStatus(String status);
+
+    List<EmergencyPatient> findAllByOrderByDateAsc();
+
+    List<EmergencyPatient> findAllByBloodType(String bloodType);
+
+    List<EmergencyPatient> findEmergencyPatientsByHospital_City(String city);
+
 }

@@ -12,6 +12,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment,Integer
 
     Appointment findAppointmentById(Integer id);
 
+    List<Appointment> findAppointmentsByBloodBankId(Integer bloodBankId);
+
     List<Appointment> findAppointmentsByUserId(Integer user_id);
 
     List<Appointment> findAppointmentsByAttendedEqualsIgnoreCase(String isAttended);

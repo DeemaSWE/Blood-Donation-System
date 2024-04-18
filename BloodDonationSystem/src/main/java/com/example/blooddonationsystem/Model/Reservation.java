@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Setter
@@ -22,17 +23,20 @@ public class Reservation {
     private Integer id;
 
 
+    @Pattern(regexp = "^(pending|accepted|rejected|canceled)$")
+    @Column(columnDefinition = "varchar(9) check(status in ('pending','accepted','rejected','canceled'))")
     private String status;
+
+
+
+    //    relations
 
     @ManyToOne
     @JsonIgnore
     private EmergencyPatient emergencyPatient;
 
     @ManyToMany
-    private Set<User> users;
-
-    @ManyToMany
-    private Set<Volunteering> volunteerings;
+    private Set<User> users = new HashSet<>();
 
 
 }

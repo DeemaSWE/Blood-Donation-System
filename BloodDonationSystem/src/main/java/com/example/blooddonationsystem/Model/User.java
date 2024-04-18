@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Setter
@@ -47,9 +48,13 @@ public class User {
     @Column(columnDefinition = "varchar(3) not null")
     private String bloodType;
 
+
+
+    //    relations
+
     @ManyToMany
-    private Set<Reservation> reservations;
+    private Set<Reservation> reservations = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private Set<Appointment> appointments;
+    private Set<Appointment> appointments = new HashSet<>();
 }

@@ -67,10 +67,10 @@ public class HospitalController {
     }
 
     // hospital can rate a volunteer
-    @PutMapping("/rate/{user_id}/{hospital_id}/{rating}")
-    public ResponseEntity rateVolunteer(@PathVariable Integer user_id,@PathVariable Integer hospital_id,@PathVariable Double rating) {
-        hospitalService.rateVolunteer(user_id,hospital_id,rating);
-        return ResponseEntity.status(200).body("Appointment rated successfully");
+    @PutMapping("/rate/{volunteer_id}/{hospital_id}/{hospitalVolunteer_id}/{rating}")
+    public ResponseEntity rateVolunteer(@PathVariable Integer volunteer_id,@PathVariable Integer hospital_id, @PathVariable Integer hospitalVolunteer_id, @PathVariable Double rating) {
+        hospitalService.rateVolunteer(hospital_id, hospitalVolunteer_id, volunteer_id,rating);
+        return ResponseEntity.status(200).body("Volunteer rated successfully");
     }
 
 }

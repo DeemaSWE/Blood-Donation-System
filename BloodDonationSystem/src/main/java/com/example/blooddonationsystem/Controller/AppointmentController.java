@@ -41,6 +41,9 @@ public class AppointmentController {
     }
 
 
+//    endpoint
+
+
     // get user appointements
     @GetMapping("/get/{user_id}")
     public List<Appointment> getUserAppointments(@PathVariable Integer user_id) {

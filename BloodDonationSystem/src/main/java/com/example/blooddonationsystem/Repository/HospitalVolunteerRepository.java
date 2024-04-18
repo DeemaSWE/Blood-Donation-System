@@ -8,4 +8,6 @@ public interface HospitalVolunteerRepository extends JpaRepository<HospitalVolun
 
     HospitalVolunteer findHospitalVolunteerById(Integer id);
 
+    HospitalVolunteer getAllHospitalVolunteerById(Integer hospitalVolunteer_id);
+
 }

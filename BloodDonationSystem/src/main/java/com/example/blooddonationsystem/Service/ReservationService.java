@@ -27,8 +27,34 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-    // add a reservation for a user to donate blood to an emergency patient
-    public void addReservation(Reservation reservation,Integer user_id,Integer emergencyPatinet_id) {
+    public void updateReservation(Integer id, Reservation updatedReservation) {
+        Reservation reservation = reservationRepository.findReservationById(id);
+
+        if (reservation == null)
+            throw new ApiException("reservation not found");
+
+        reservation.setUsers(updatedReservation.getUsers());
+        reservation.setEmergencyPatient(updatedReservation.getEmergencyPatient());
+        reservation.setStatus(updatedReservation.getStatus());
+
+        reservationRepository.save(reservation);
+    }
+
+    public void deleteReservation(Integer id) {
+        Reservation r = reservationRepository.findReservationById(id);
+
+        if (r == null) {
+            throw new ApiException("not found");
+        }
+        reservationRepository.delete(r);
+    }
+
+
+    //    endpoint
+
+
+    // user make a reservation to donate blood to an emergency patient
+    public void addReservation(Integer user_id, Integer emergencyPatinet_id) {
         EmergencyPatient emergencyPatient = emergencyPatientRepository.findEmergencyPatientById(emergencyPatinet_id);
         User user = userRepository.findUserById(user_id);
 
@@ -38,13 +64,16 @@ public class ReservationService {
         if(emergencyPatient.getBloodDonation() == 0)
             throw new ApiException("Cannot reserve for this patient");
 
-
-
         if(user == null)
             throw new ApiException("User not found");
 
         if(!checkBloodType(user, emergencyPatient))
             throw new ApiException("User blood type is not compatible with the emergency patient blood type");
+
+        Reservation reservation = new Reservation();
+        reservation.setEmergencyPatient(emergencyPatient);
+        reservation.getUsers().add(user);
+        reservation.setStatus("pending");
 
         reservationRepository.save(reservation);
     }
@@ -83,29 +112,24 @@ public class ReservationService {
     }
 
 
-    public void updateReservation(Integer id, Reservation updatedReservation) {
-        Reservation reservation = reservationRepository.findReservationById(id);
 
-        if (reservation == null)
-            throw new ApiException("reservation not found");
+    public String cancelReservation(Integer userId , Integer reservationId){
+       Reservation reservation = reservationRepository.findReservationById(reservationId);
 
-        reservation.setUsers(updatedReservation.getUsers());
-        reservation.setEmergencyPatient(updatedReservation.getEmergencyPatient());
-        reservation.setStatus(updatedReservation.getStatus());
+       if (reservation == null ){
+           throw new ApiException("invalid reservation");
+       }
 
-        reservationRepository.save(reservation);
+       for(User user : reservation.getUsers()){
+           if (user.getId().equals(userId)){
+               reservation.setStatus("canceled");
+               reservationRepository.save(reservation);
+               return "reservation canceled";
+           }
+       }
+
+       return "sorry we cannot find the reservation";
     }
-
-
-    public void deleteReservation(Integer id) {
-        Reservation r = reservationRepository.findReservationById(id);
-
-        if (r == null) {
-            throw new ApiException("not found");
-        }
-        reservationRepository.delete(r);
-    }
-
 
 
 }

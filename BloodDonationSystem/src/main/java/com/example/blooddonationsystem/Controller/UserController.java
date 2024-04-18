@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
@@ -35,6 +37,12 @@ public class UserController {
     public ResponseEntity deleteUser(@PathVariable Integer id) {
         userService.deleteUser(id);
         return ResponseEntity.status(200).body("User deleted successfully");
+    }
+
+    // endpoint
+    @GetMapping("/bloodtypes/{user_BloodType}")
+    public List<String> getBloodTypesUserCanDonate(@PathVariable String user_BloodType) {
+        return userService.getBloodTypesUserCanDonate(user_BloodType);
     }
 
 }

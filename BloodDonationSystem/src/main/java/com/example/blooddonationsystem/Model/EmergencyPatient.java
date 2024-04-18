@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Set;
 
 @Setter
@@ -32,17 +31,16 @@ public class EmergencyPatient {
     private String paitentName ;
 
 
-    @NotNull(message = "paitent Numbaer should be not empty")
+    @NotNull(message = "paitent Number should be not empty")
     @Positive(message = "positive number only")
     @Column(columnDefinition = "int not null unique")
-    private Integer paitentNumbaer;
+    private Integer paitentNumber;
 
 
     @NotEmpty(message = "paitent Case should be not empty")
     @Size(min = 10 , message = "paitent Case should be more than 10 char")
     @Column(columnDefinition = "varchar(250) not null")
     private String paitentCase ;
-
 
     @NotEmpty(message = "Emergency status should be not empty")
     @Pattern(regexp = "^(very urgent|urgent)$")
@@ -62,9 +60,18 @@ public class EmergencyPatient {
     private Integer bloodDonation;
 
 
+    @Pattern(regexp = "^(completed|not completed)$" , message = "status should be completed or not completed")
+    @Column(columnDefinition = "varchar(20)  check (status in ('completed','not completed'))")
+    private String status;
+
+
     @FutureOrPresent
     @Column(columnDefinition = "date")
     private LocalDate date ;
+
+
+
+    //    relations
 
     @ManyToOne
     @JsonIgnore
@@ -72,10 +79,5 @@ public class EmergencyPatient {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "emergencyPatient")
     private Set<Reservation> reservations;
-
-    @NotEmpty(message = "status should be not empty")
-    @Pattern(regexp = "^(completed|not complete)$" , message = "status should be completed or not complete")
-    @Column(columnDefinition = "varchar(10) not null check (status in ('completed','not complete'))")
-    private String status;
 
 }

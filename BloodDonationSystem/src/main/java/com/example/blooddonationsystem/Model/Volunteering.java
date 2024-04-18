@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Setter
@@ -32,13 +33,13 @@ public class Volunteering {
     @NotNull(message = "age should be not empty")
     @Positive(message = "positive number only")
     @Min(value = 18)
-    @Column(columnDefinition = "int not null")
+    @Column(columnDefinition = "int")
     private Integer age ;
 
 
     @NotNull(message = "age should be not empty")
     @Positive(message = "positive number only")
-    @Column(columnDefinition = "int not null")
+    @Column(columnDefinition = "int")
     private String phoneNumber ;
 
 
@@ -52,18 +53,19 @@ public class Volunteering {
     @Column(columnDefinition = "varchar(25) not null unique")
     private String email ;
 
+
+    @Column(columnDefinition = "double")
     private Double averageRating;
 
+
+    @Column(columnDefinition = "int")
     private Integer ratingCount;
 
-    @ManyToMany
-    @JsonIgnore
-    private Set<HospitalVolunteer> hospitalVolunteers;
 
-    @ManyToMany
-    private Set<Reservation> reservations;
+
+    //    relations
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "volunteering")
-    private Set<Appointment> appointments;
+    private Set<VolunteeringRequest> volunteeringRequests = new HashSet<>();
 
 }

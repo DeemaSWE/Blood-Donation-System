@@ -23,15 +23,19 @@ public class EmergencyPatientService {
         return emergencyPatientRepository.findAll();
     }
 
-    public void addEmergencyPatient(EmergencyPatient emergencyPatient , Integer HospitalId) {
+    public void addEmergencyPatient(Integer hospital_id,EmergencyPatient emergencyPatient) {// اضافه واساين
 
-        Hospital hospital = hospitalRepository.findHospitalById(HospitalId);
-        if (hospital == null){
+        Hospital h = hospitalRepository.findHospitalById(hospital_id);
+
+        if(h==null){
             throw new ApiException("hospital not found");
         }
 
+        emergencyPatient.setHospital(h);
+
         emergencyPatientRepository.save(emergencyPatient);
     }
+
 
     public void updateEmergencyPatient(Integer id, EmergencyPatient emergencyPatient) {
         EmergencyPatient emergencyPatient1 = emergencyPatientRepository.findEmergencyPatientById(id);
@@ -42,9 +46,8 @@ public class EmergencyPatientService {
 
         emergencyPatient1.setBloodDonation(emergencyPatient.getBloodDonation());
         emergencyPatient1.setBloodType(emergencyPatient.getBloodType());
-        emergencyPatient1.setPaitentCase(emergencyPatient.getPaitentCase());
         emergencyPatient1.setPaitentName(emergencyPatient.getPaitentName());
-        emergencyPatient1.setPaitentNumbaer(emergencyPatient.getPaitentNumbaer());
+        emergencyPatient1.setPaitentNumber(emergencyPatient.getPaitentNumber());
 
 
         emergencyPatientRepository.save(emergencyPatient1);
@@ -60,7 +63,8 @@ public class EmergencyPatientService {
         emergencyPatientRepository.delete(emergencyPatient1);
     }
 
-//    endpoint
+
+    //    endpoint
 
     public List<EmergencyPatient> sortCases(){
         List<EmergencyPatient> veryUrgent = emergencyPatientRepository.getEmergencyPatientsByEmergencyStatus("very urgent");
@@ -70,5 +74,19 @@ public class EmergencyPatientService {
         return veryUrgent;
     }
 
+//هياء
+
+    public List<EmergencyPatient> sortEpByDate() {
+        return emergencyPatientRepository.findAllByOrderByDateAsc();
+    }
+
+    public List<EmergencyPatient> findEmergencyPatientsByBloodType(String bloodType) {
+        return emergencyPatientRepository.findAllByBloodType(bloodType);
+    }
+
+
+    public List<EmergencyPatient> findEmergencyPatientsByHospitalByCity(String city) {
+        return emergencyPatientRepository.findEmergencyPatientsByHospital_City(city);
+    }
 
 }

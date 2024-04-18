@@ -2,6 +2,7 @@ package com.example.blooddonationsystem.Advice;
 
 import com.example.blooddonationsystem.Api.ApiException;
 import com.example.blooddonationsystem.Api.ApiResponse;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -21,6 +22,11 @@ public class ControllerAdvice {
 
     @ExceptionHandler(value = ApiException.class)
     public ResponseEntity<ApiResponse> ApiException(ApiException e){
+        return ResponseEntity.status(400).body(new ApiResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(value = ConstraintViolationException.class)
+    public ResponseEntity<ApiResponse> ConstraintViolationException(ConstraintViolationException e){
         return ResponseEntity.status(400).body(new ApiResponse(e.getMessage()));
     }
 

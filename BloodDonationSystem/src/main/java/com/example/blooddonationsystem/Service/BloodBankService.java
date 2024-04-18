@@ -1,14 +1,16 @@
 package com.example.blooddonationsystem.Service;
 
 import com.example.blooddonationsystem.Api.ApiException;
-import com.example.blooddonationsystem.Model.Appointment;
+import com.example.blooddonationsystem.Model.*;
 import com.example.blooddonationsystem.Model.BloodBank;
 import com.example.blooddonationsystem.Repository.AppointmentRepository;
+import com.example.blooddonationsystem.Repository.AvailableSlotRepository;
 import com.example.blooddonationsystem.Repository.BloodBankRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -17,11 +19,13 @@ public class BloodBankService {
 
     private final BloodBankRepository bloodBankRepository;
     private final AppointmentRepository appointmentRepository ;
+    private final AvailableSlotRepository availableSlotRepository;
     public List<BloodBank> getAllBloodBanks() {
         return bloodBankRepository.findAll();
     }
 
     public void addBloodBank(BloodBank bloodBank) {
+        bloodBank.setIsThere(Boolean.TRUE);
         bloodBank.setDate(LocalDate.now());
         bloodBankRepository.save(bloodBank);
     }
@@ -47,14 +51,31 @@ public class BloodBankService {
         bloodBankRepository.delete(bloodBank);
     }
 
+    // update available slot
+    public void updateAvailableSlot(Integer bloodbank_id, Integer slot_id, AvailableSlot updatedSlot) {
+        BloodBank bloodBank = bloodBankRepository.findBloodBankById(bloodbank_id);
+        AvailableSlot availableSlot = availableSlotRepository.findAvailableSlotById(slot_id);
+
+        if (bloodBank == null || availableSlot == null)
+            throw new ApiException("BloodBank or AvailableSlot not found");
+
+        if (!availableSlot.getBloodBank().getId().equals(bloodbank_id))
+            throw new ApiException("BloodBank is not authorized to update this slot");
+
+        availableSlot.setDateTime(updatedSlot.getDateTime());
+
+        availableSlotRepository.save(availableSlot);
+    }
+
+
+
+
+    //    endpoint
 
     public List<Appointment> getAllAppointments(String isAttended ) {
 
         return appointmentRepository.findAppointmentsByAttendedEqualsIgnoreCase(isAttended);
     }
-
-    //    endpoint
-
 
     // blood bank can change user appointment status to attended
     public void attendAppointment(Integer bloodbank_id, Integer appointment_id) {
@@ -69,27 +90,9 @@ public class BloodBankService {
         if(appointment.getStatus().equalsIgnoreCase("Attended"))
             throw new ApiException("Appointment is already attended");
 
-        appointment.setAttended("Attended");
+        appointment.setAttended("attended");
 
         appointmentRepository.save(appointment);
-    }
-
-
-    // قبول او رفض الموعد
-    public String AcceptingOrRejectingAppointment(Integer bloodBankId, Integer appointmentId, String status ){
-        BloodBank bloodBank = bloodBankRepository.findBloodBankById(bloodBankId);
-        Appointment appointment = appointmentRepository.findAppointmentById(appointmentId);
-
-        if (bloodBank == null || appointment == null){
-            throw new ApiException("Blood bank or appointment not found");
-        } else if (appointment.getBloodBank().getId().equals(bloodBankId)) {
-            appointment.setStatus(status);
-            appointmentRepository.save(appointment);
-
-            return "status change to " + status;
-        }
-
-        return "invalid blood bank id";
     }
 
 
@@ -110,5 +113,17 @@ public class BloodBankService {
         }
 
         return "the blood bank presence status has been changed to " + isThere;
+    }
+
+    // add availble slot
+    public void addAvailableSlot(Integer bloodbank_id, AvailableSlot availableSlot) {
+        BloodBank bloodBank = bloodBankRepository.findBloodBankById(bloodbank_id);
+
+        if (bloodBank == null)
+            throw new ApiException("BloodBank not found");
+
+        availableSlot.setBloodBank(bloodBank);
+
+        availableSlotRepository.save(availableSlot);
     }
 }

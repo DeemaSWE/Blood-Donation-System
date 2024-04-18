@@ -30,19 +30,25 @@ public class BloodBank {
     @Column(columnDefinition = "varchar(50) not null")
     private String city;
 
-    @AssertTrue
+
     @Column(columnDefinition = "boolean")
     private Boolean isThere ;
-
 
     @Column(columnDefinition = "date")
     private LocalDate date ;
 
-
+    @Column(columnDefinition = "double")
     private Double averageRating;
 
+    @Column(columnDefinition = "int")
     private Integer ratingCount;
 
+
+
+//    relations
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "bloodBank")
     private Set<Appointment> appointments;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "bloodBank")
+    private Set<AvailableSlot> availableSlots;
 }

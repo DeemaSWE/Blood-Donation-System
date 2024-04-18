@@ -4,6 +4,7 @@ import com.example.blooddonationsystem.Model.Reservation;
 import com.example.blooddonationsystem.Service.ReservationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,18 +23,30 @@ public class ReservationController {
         return reservationService.getAllReservation();
     }
 
-    @PostMapping("/add/{user_id}/{emergencyPatient_id}")
-    public void addReservation(@RequestBody @Valid Reservation reservation, @PathVariable Integer user_id, Integer emergencyPatinet_id) {
-        reservationService.addReservation(reservation,user_id,emergencyPatinet_id);
-    }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public void updateReservation(@PathVariable Integer id, @RequestBody Reservation reservation) {
         reservationService.updateReservation(id, reservation);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deleteReservation(@PathVariable Integer id) {
         reservationService.deleteReservation(id);
+    }
+
+
+
+    //    endpoint
+
+    @PutMapping("/cancel/{userId}/{reservationId}")
+    public ResponseEntity cancelReservation(@PathVariable Integer userId , @PathVariable Integer reservationId){
+        return ResponseEntity.status(200).body(reservationService.cancelReservation(userId, reservationId));
+
+    }
+
+    @PostMapping("/add/{user_id}/{emergencyPatient_id}")
+    public ResponseEntity addReservation(@PathVariable Integer user_id, @PathVariable Integer emergencyPatient_id) {
+        reservationService.addReservation(user_id, emergencyPatient_id);
+        return ResponseEntity.status(200).body("Reservation added successfully");
     }
 }

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Setter
@@ -28,9 +29,21 @@ public class Hospital {
     @Column(columnDefinition = "varchar(50) not null")
     private String city;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "hospital")
-    private Set<EmergencyPatient> emergencyPatients;
+    @Column(columnDefinition = "double")
+    private Double averageRating;
+
+    @Column(columnDefinition = "int")
+    private Integer ratingCount;
+
+
+
+    //    relations
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "hospital")
-    private Set<HospitalVolunteer> hospitalVolunteers;
+    private Set<EmergencyPatient> emergencyPatients = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "hospital")
+    private Set<HospitalVolunteer> hospitalVolunteers = new HashSet<>();
+
+
 }

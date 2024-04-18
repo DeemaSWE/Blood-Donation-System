@@ -23,20 +23,26 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @FutureOrPresent
+    @FutureOrPresent(message = "Date should be in the future")
     @Column(columnDefinition = "date")
-    private LocalDateTime time;
+    private LocalDateTime dateTime;
 
 
     @Pattern(regexp = "^(unattended|attended)$")
-    //unattended, attended
+    @Column(columnDefinition = "varchar(20) check(attended in ('unattended','attended'))")
     private String attended;
 
-    @Pattern(regexp = "^(pending|accepted|rejected|cancelled)$")
-    //pending, accepted, rejected, cancelled
+    @Pattern(regexp = "^(scheduled|rejected|cancelled)$")
+    @Column(columnDefinition = "varchar(20) check(status in ('scheduled','rejected','cancelled'))")
     private String status;
 
+
+    @Column(columnDefinition = "double")
     private Double rating;
+
+
+
+    //    relations
 
     @ManyToOne
     @JsonIgnore
